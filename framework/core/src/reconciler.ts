@@ -1,4 +1,6 @@
 import { createDom, updateDom } from "./dom"
+import { ITaskCallback } from './type'
+import { scheduleWork } from "./scheduler"
 
 let nextUnitOfWork = null
 let currentRoot = null
@@ -45,7 +47,7 @@ function commitDeletion(fiber, domParent) {
   }
 }
 
-function render (element, container) {
+export function render (element, container) {
   wipRoot = {
     dom: container,
     props: {
@@ -57,24 +59,26 @@ function render (element, container) {
   nextUnitOfWork = wipRoot
 
   // 开始时间循环，监听刷新任务
-  // requestIdleCallback(workLoop)
+  scheduleWork(workLoop)
 }
 
-
-function workLoop(deadline) {
+function workLoop(timeout: number | boolean): boolean | ITaskCallback {
   let shouldYield = false;
   while (nextUnitOfWork && !shouldYield) {
     nextUnitOfWork = performUnitOfWork(
       nextUnitOfWork
     )
-    shouldYield = deadline.timeRemaining() < 1
+    shouldYield = !timeout
   }
 
   if (!nextUnitOfWork && wipRoot) {
     commitRoot();
+    return null
   }
-
-  // requestIdleCallback(workLoop)
+  if (nextUnitOfWork && wipRoot) {
+    return workLoop;
+  }
+  return null
 }
 
 function performUnitOfWork(fiber) {

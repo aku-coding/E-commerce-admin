@@ -21,7 +21,7 @@ const callbacks = []
 export function schedule (cb) {
   // 因为requestMessageChannel会返回一个函数用于执行下一个宏任务
   // 因此此时所有同步或者微任务都已经加入callbacks中
-  callbacks.push(cb) === 1 && requestMessageChannel()()
+  callbacks.push(cb) === 1 && postMessage()
 }
 
 // 任务调度
@@ -39,7 +39,7 @@ export function scheduleWork (callback: ITaskCallback): void {
   schedule(flushWork)
 }
 
-function requestMessageChannel () {
+const postMessage = (function () {
   // 定义一个存放执行所有回调函数的函数
   const cb = () => callbacks.splice(0).forEach(c => c())
   if (typeof MessageChannel !== 'undefined') {
@@ -52,7 +52,7 @@ function requestMessageChannel () {
   }
   // MessageChannel不存在就用setTimeout异步执行
   return () => setTimeout(cb)
-}
+})()
 
 // 刷新任务
 function flushWork(): void {

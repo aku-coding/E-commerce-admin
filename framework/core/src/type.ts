@@ -87,7 +87,7 @@ export interface PropsWithChildren {
 }
 
 export type ITaskCallback =
-  | ((time: number | boolean) => boolean)
+  | ((time: number | boolean) => boolean | ITaskCallback)
   | boolean
   | null
 
