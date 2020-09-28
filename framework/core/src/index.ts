@@ -1,1 +1,1 @@
-export { default as createElement } from "./createElement"
+export { createElement } from "./createElement"
