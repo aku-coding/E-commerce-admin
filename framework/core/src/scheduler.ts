@@ -71,7 +71,7 @@ function flush(initTime: number): boolean {
   while (currentTask) {
     // 获取任务是否过期未执行 true为任务超过最晚执行时间
     const timeout = currentTask.time <= currentTime
-    // 如果任务未过期，但当前宏任务执行时间超过 5 秒
+    // 如果任务未过期，但当前宏任务执行时间超过 5 毫秒
     // 应该让出主线程，直接退出任务调度
     if (!timeout && shouldYeild()) {
       break
@@ -110,6 +110,6 @@ export function shouldYeild(): boolean {
 }
 
 function getTime() {
-  // 单位秒，但使用了一个浮点数来达到微秒级别的精确度
+  // 单位毫秒，但使用了一个浮点数来达到微秒级别的精确度
   return performance.now()
 }

@@ -50,6 +50,7 @@ export interface IFiber<P extends Attributes = any> {
   promise?: Promise<Function>[]
   // 优先级相关
   lane?: boolean
+  done?: () => void
 }
 
 export interface FunctionComponent<P extends Attributes = {}> {
