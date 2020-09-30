@@ -1,7 +1,10 @@
+/**
+ * @name 调和
+ */
 import { IFiber, AriseElement, ITaskCallback, FunctionComponent, Attributes, HTMLElementEx, AriseNode, FiberMap, IRef, IEffect } from './type'
 import { createDom, updateDom } from './dom'
 import {} from './hooks'
-import { scheduleWork, shouldYeild, schedule } from "./scheduler"
+import { scheduleWork, shouldYield, schedule } from "./scheduler"
 import { createElement } from './createElement'
 
 let preCommit: IFiber | undefined
@@ -19,10 +22,10 @@ export const render = (element: AriseNode, container: Node, done?: () => void): 
     },
     done,
   } as IFiber
-  update(rootFiber)
+  dispatchUpdate(rootFiber)
 }
 
-function update(fiber?: IFiber) {
+function dispatchUpdate(fiber?: IFiber) {
   if(fiber && !fiber.lane) {
     fiber.lane = true
     microTask.push(fiber)
@@ -34,7 +37,7 @@ function reconcileWork(timeout: boolean): boolean | null | ITaskCallback {
     if(!WIP) {
       WIP = microTask.shift()
     }
-    while (WIP && (!shouldYeild() || timeout)) {
+    while (WIP && (!shouldYield() || timeout)) {
       WIP = reconcile(WIP)
     }
     return null

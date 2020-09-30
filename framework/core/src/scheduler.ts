@@ -73,7 +73,7 @@ function flush(initTime: number): boolean {
     const timeout = currentTask.time <= currentTime
     // 如果任务未过期，但当前宏任务执行时间超过 5 毫秒
     // 应该让出主线程，直接退出任务调度
-    if (!timeout && shouldYeild()) {
+    if (!timeout && shouldYield()) {
       break
     }
 
@@ -104,7 +104,7 @@ function peek(queue: ITask[]) {
 }
 
 // 是否应该等待让出主线程
-export function shouldYeild(): boolean {
+export function shouldYield(): boolean {
   // 当前时间大于等于 deadline 时应该让出
   return getTime() >= deadline
 }
